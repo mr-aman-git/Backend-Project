@@ -1,21 +1,26 @@
-import mongoose from 'mongoose';
-import {DB_NAME} from './constants';
 
+import db from './db/index.js';
 
+import dotenv from 'dotenv';
 
-const db= async()=>{
-    try {
-        const dbConnect= await mongoose.connect(`${process.env.MONGODB_URI} / ${DB_NAME}`)
-        console.log(`DATABASE HOST ${dbConnect.connection.host}`);
-        
-    } catch (error) {
-        console.log(error);
-        process.exit(1);
-        
-    }
-}
+dotenv.config();
+
 
 db();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 import express from 'express'
