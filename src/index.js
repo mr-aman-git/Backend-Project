@@ -6,7 +6,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-db();
+db()
+.then(()=>{
+    app.listen(process.env.PORT || 8000, ()=>{
+        console.log(`server connect on port ${process.env.PORT}`);
+        
+    })
+})
+.catch((error)=>{
+    console.log("error", error);
+    
+})
 
 
 
