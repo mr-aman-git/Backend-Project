@@ -1,10 +1,8 @@
-
+import express from 'express'
 import db from './db/index.js';
-
 import dotenv from 'dotenv';
-
 dotenv.config();
-
+const app = express();
 
 db()
 .then(()=>{
@@ -17,6 +15,13 @@ db()
     console.log("error", error);
     
 })
+
+//routes import
+import userRouter from './routes/user.routes.js'
+
+//routes declaration
+app.use("/api/v1/user", userRouter)
+
 
 
 
