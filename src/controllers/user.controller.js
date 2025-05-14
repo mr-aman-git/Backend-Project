@@ -17,7 +17,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // STEP 1 - GET USER DETAILS FROM FRONTEND
   const { fullname, username, email, password } = req.body;
-  console.log("req body: ", req.body);
 
   // STEP 2 - VALIDATION-NOT EMPTY
   if (fullname == "") {
@@ -34,7 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // STEP 3 - CHECK IF USER ALREADY EXIST: USERNAME, EMAIL
-  const existingUser = User.findOne({
+  const existingUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -44,18 +43,22 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // STEP 4 - CHECK FOR IMAGES AND AVATAR OR FILE
 
-  const avatarLocalPath = req.files?.avtar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  const avtarLocalPath = req.files?.avtar[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path || "";
+  let coverImageLocalPath = "";
 
-  if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar Image Required");
+  if (req.files && req.files.coverImage && req.files.coverImage.length > 0) {
+    coverImageLocalPath = req.files.coverImage[0].path;
   }
 
+  if (!avtarLocalPath) {
+    throw new ApiError(400, "Avtar Image Required");
+  }
   // STEP 5 - UPLOAD CLOUDINARY THEM
-  const avatar = await uplodonCloudinary(avatarLocalPath);
+  const avtar = await uplodonCloudinary(avtarLocalPath);
   const coverImage = await uplodonCloudinary(coverImageLocalPath);
 
-  if (!avatar) {
+  if (!avtar) {
     throw new ApiError(400, "Avatar Image not Upload");
   }
 
@@ -63,7 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const user = await User.create({
     fullname,
-    avatar: avatar.url,
+    avtar: avtar.url,
     coverImage: coverImage?.url || "",
     username: username.toLowerCase(),
     email,
@@ -84,9 +87,6 @@ const registerUser = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(new ApiResponse(200, createdUser, "user Register Successfull"));
-  if (createdUser) {
-    throw new ApiResponse(200, "Register Successfull");
-  }
 });
 
 export { registerUser };

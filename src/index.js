@@ -1,42 +1,25 @@
-import express from 'express'
-import db from './db/index.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import express from "express";
+import db from "./db/index.js";
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 const app = express();
 app.use(express.json());
 
 db()
-.then(()=>{
-    app.listen(process.env.PORT || 8000, ()=>{
-        console.log(`server connect on port ${process.env.PORT}`);
-        
-    })
-})
-.catch((error)=>{
+  .then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`server connect on port ${process.env.PORT}`);
+    });
+  })
+  .catch((error) => {
     console.log("error", error);
-    
-})
+  });
 
 //routes import
-import userRouter from './routes/user.routes.js'
+import userRouter from "./routes/user.routes.js";
 
 //routes declaration
-app.use("/api/v1/user", userRouter)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use("/api/v1/user", userRouter);
 
 /*
 import express from 'express'
