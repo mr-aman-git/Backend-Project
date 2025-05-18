@@ -1,9 +1,11 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import db from "./db/index.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 db()
   .then(() => {
